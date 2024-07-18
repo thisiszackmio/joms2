@@ -8,14 +8,6 @@ export default function RepairRequestForm(){
 
   const { currentUser } = useUserStateContext();
 
-  useEffect(() => {
-    // Redirect to dashboard if pwd_change is not 1
-    if (currentUser && currentUser.pwd_change === 1) {
-      window.location.href = '/newpassword';
-      return null;
-    }
-  }, [currentUser]);
-
   //Popup
   const [showPopup, setShowPopup] = useState(false);
   const [popupContent, setPopupContent] = useState("");
@@ -119,7 +111,7 @@ export default function RepairRequestForm(){
         setPopupMessage(
           <div>
             <p className="popup-title">Success</p>
-            <p>Form submit successfully</p>
+            <p className="popup-message">Form submit successfully</p>
           </div>
         );
         fetchNotification();    
@@ -131,7 +123,7 @@ export default function RepairRequestForm(){
           setPopupMessage(
             <div>
               <p className="popup-title">There is something wrong</p>
-              <p>Please contact the developer on the issue (Error 500)</p>
+              <p className="popup-message">Please contact the developer on the issue (Error 500)</p>
             </div>
           );
         }

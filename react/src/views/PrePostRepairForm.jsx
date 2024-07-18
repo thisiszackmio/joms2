@@ -19,10 +19,6 @@ export default function PrePostRepairForm(){
   const today = new Date().toISOString().split('T')[0];
   const currentDate = new Date().toISOString().split('T')[0];
 
-  useEffect(() => {
-    
-  }, [currentUser]);
-
   //Date Format 
   function formatDate(dateString) {
     const options = { month: 'long', day: 'numeric', year: 'numeric' };
@@ -87,57 +83,52 @@ export default function PrePostRepairForm(){
   // Edit Part D
   const [updateRemark, setUpdateRemark] = useState('');
 
-  useEffect(() => {
-    // Redirect to dashboard if pwd_change is not 1
-    if (currentUser && currentUser.pwd_change === 1) {
-      window.location.href = '/newpassword';
-      return null;
-    }
+  // Get All the Data
+  const fetchData = async () => {
+    try {
+      const response = await axiosClient.get(`/inspectionform/${id}`);
+      const responseData = response.data;
 
-    // Get All the Data
-    const fetchData = async () => {
-      try {
-        const response = await axiosClient.get(`/inspectionform/${id}`);
-        const responseData = response.data;
-  
-        const getAssignPersonnel = responseData.assign_personnel;
-        const getPartA = responseData.partA;
-        const getPartB = responseData.partB;
-        const getPartCD = responseData.partCD;
-        const personnel = responseData.personnel;
-        const requestor = responseData.requestor;
-        const supervisor = responseData.supervisor;
-        const gso = responseData.gso;
-        const manager = responseData.manager;
-  
-        const getPersonnelData = getAssignPersonnel.map((Personnel) => {
-          const { ap_id, ap_name, ap_type } = Personnel;
-          return {
-            id: ap_id,
-            name: ap_name,
-            type: ap_type,
-          };
-        });
-  
-        setInspectionData({
-          getPersonnelData,
-          getPartA,
-          getPartB,
-          getPartCD,
-          personnel,
-          requestor,
-          supervisor,
-          gso,
-          manager,
-        });
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        // Handle error (e.g., show an error message to the user)
-      } finally {
-        setIsLoading(false);
-      }
-    };
-  
+      const getAssignPersonnel = responseData.assign_personnel;
+      const getPartA = responseData.partA;
+      const getPartB = responseData.partB;
+      const getPartCD = responseData.partCD;
+      const personnel = responseData.personnel;
+      const requestor = responseData.requestor;
+      const supervisor = responseData.supervisor;
+      const gso = responseData.gso;
+      const manager = responseData.manager;
+
+      const getPersonnelData = getAssignPersonnel.map((Personnel) => {
+        const { ap_id, ap_name, ap_type } = Personnel;
+        return {
+          id: ap_id,
+          name: ap_name,
+          type: ap_type,
+        };
+      });
+      
+      //console.log(requestor)
+      setInspectionData({
+        getPersonnelData,
+        getPartA,
+        getPartB,
+        getPartCD,
+        personnel,
+        requestor,
+        supervisor,
+        gso,
+        manager,
+      });
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      // Handle error (e.g., show an error message to the user)
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {  
     fetchData();
   }, [currentUser, id]);
 
@@ -214,7 +205,7 @@ export default function PrePostRepairForm(){
         setPopupMessage(
           <div>
             <p className="popup-title">Success</p>
-            <p>Form update successfully</p>
+            <p className="popup-message">Form update successfully</p>
           </div>
         ); 
         setShowPopup(true);   
@@ -266,7 +257,7 @@ export default function PrePostRepairForm(){
         setPopupMessage(
           <div>
             <p className="popup-title">Success</p>
-            <p>Form update successfully</p>
+            <p className="popup-message">Form update successfully</p>
           </div>
         ); 
         setShowPopup(true);   
@@ -305,7 +296,7 @@ export default function PrePostRepairForm(){
       setPopupMessage(
         <div>
           <p className="popup-title">Invalid</p>
-          <p>Please fill exactly one field</p>
+          <p className="popup-message">Please fill exactly one field</p>
         </div>
       );
     }
@@ -319,7 +310,7 @@ export default function PrePostRepairForm(){
         setPopupMessage(
           <div>
             <p className="popup-title">Success</p>
-            <p>Form update successfully</p>
+            <p className="popup-message">Form update successfully</p>
           </div>
         ); 
         setShowPopup(true);   
@@ -361,7 +352,7 @@ export default function PrePostRepairForm(){
         setPopupMessage(
           <div>
             <p className="popup-title">Success</p>
-            <p>Form update successfully</p>
+            <p className="popup-message">Form update successfully</p>
           </div>
         ); 
         setShowPopup(true);   
@@ -388,7 +379,7 @@ export default function PrePostRepairForm(){
     setPopupMessage(
       <div>
         <p className="popup-title">Approval Request</p>
-        <p>Do you want to approve <strong>{InspectionData?.requestor?.r_name}'s</strong> request?</p>
+        <p className="popup-message">Do you want to approve <strong>{InspectionData?.requestor?.r_name}'s</strong> request?</p>
       </div>
     );
   }
@@ -400,7 +391,7 @@ export default function PrePostRepairForm(){
     setPopupMessage(
       <div>
         <p className="popup-title">Approval Request</p>
-        <p>Do you want to approve <strong>{InspectionData?.requestor?.r_name}'s</strong> request?</p>
+        <p className="popup-message">Do you want to approve <strong>{InspectionData?.requestor?.r_name}'s</strong> request?</p>
       </div>
     );
   }
@@ -420,7 +411,7 @@ export default function PrePostRepairForm(){
         setPopupMessage(
           <div>
             <p className="popup-title">Success</p>
-            <p>Thank you for approving the request</p>
+            <p className="popup-message">Thank you for approving the request</p>
           </div>
         );
         setShowPopup(true);
@@ -450,7 +441,9 @@ export default function PrePostRepairForm(){
     setIsLoading(true)
     setShowPopup(false);
     setSubmitLoading(false);
-    window.location.reload();
+    fetchData();
+    handleDisableEdit();
+    handleCancelReason();
   };
 
   // Just CLose the Popup
@@ -465,7 +458,7 @@ export default function PrePostRepairForm(){
     setPopupMessage(
       <div>
         <p className="popup-title">Are you sure</p>
-        <p>If you close this request, it cannot be reopen.</p>
+        <p className="popup-message">If you close this request, it cannot be reopen.</p>
       </div>
     );
   }
@@ -474,7 +467,7 @@ export default function PrePostRepairForm(){
   const DevErrorText = (
     <div>
       <p className="popup-title">Something Wrong!</p>
-      <p>There was a problem submitting the form. Please contact the developer.</p>
+      <p className="popup-message">There was a problem submitting the form. Please contact the developer.</p>
     </div>
   );
 
@@ -494,7 +487,7 @@ export default function PrePostRepairForm(){
       setPopupMessage(
         <div>
           <p className="popup-title">Success</p>
-          <p>Thank you for approving the request</p>
+          <p className="popup-message">Thank you for approving the request</p>
         </div>
       );
       setShowPopup(true);
@@ -525,7 +518,7 @@ export default function PrePostRepairForm(){
       setPopupMessage(
         <div>
           <p className="popup-title">Success!</p>
-          <p>You disapprove the request</p>
+          <p className="popup-message">You disapprove the request</p>
         </div>
       );
       setShowPopup(true);
@@ -554,7 +547,7 @@ export default function PrePostRepairForm(){
         setPopupMessage(
           <div>
             <p className="popup-title">Success</p>
-            <p>You disapprove the request</p>
+            <p className="popup-message">You disapprove the request</p>
           </div>
         );
         setShowPopup(true);
@@ -587,7 +580,7 @@ export default function PrePostRepairForm(){
       setPopupMessage(
         <div>
           <p className="popup-title">Success</p>
-          <p>Part B Form submit successfully</p>
+          <p className="popup-message">Part B Form submit successfully</p>
         </div>
       ); 
       setShowPopup(true);   
@@ -623,7 +616,7 @@ export default function PrePostRepairForm(){
       setPopupMessage(
         <div>
           <p className="popup-title">Success</p>
-          <p>Part C Form submit successfully</p>
+          <p className="popup-message">Part C Form submit successfully</p>
         </div>
       ); 
       setShowPopup(true);   
@@ -658,7 +651,7 @@ export default function PrePostRepairForm(){
       setPopupMessage(
         <div>
           <p className="popup-title">Success</p>
-          <p>Part D Form submit successfully</p>
+          <p className="popup-message">Part D Form submit successfully</p>
         </div>
       ); 
       setShowPopup(true);   
@@ -689,7 +682,7 @@ export default function PrePostRepairForm(){
       setPopupMessage(
         <div>
           <p className="popup-title">Success</p>
-          <p>You close the request</p>
+          <p className="popup-message">You close the request</p>
         </div>
       );
       setShowPopup(true);

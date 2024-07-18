@@ -294,12 +294,14 @@ export default function RequestFormFacility(){
       .get(`/checkavailability`, { params: checkRequest })
       .then((response) => {
         const responseData = response.data;
+
+        console.log(responseData);
         if (responseData.message === 'Wrong Date') {
           setShowPopup(true);
           setPopupMessage(
             <div>
               <p className="popup-title">Invalid Date</p>
-              <p>Please input the correct date and time of activity</p>
+              <p className="popup-message">Please input the correct date and time of activity</p>
             </div>
           );
           setNototifications("error"); 
@@ -309,7 +311,7 @@ export default function RequestFormFacility(){
           setPopupMessage(
             <div>
               <p className="popup-title">Invalid Date</p>
-              <p>Please check the Date and Time of Activity</p>
+              <p className="popup-message">Please check the Date and Time of Activity</p>
             </div>
           );
           setNototifications("error");
@@ -319,7 +321,7 @@ export default function RequestFormFacility(){
           setPopupMessage(
             <div>
               <p className="popup-title">Not Vacant</p>
-              <p>This Facility is not yet available. To see it click <a className="text-blue-900 font-bold" href="http://localhost:9200/facilityvenuerequestform">here</a></p>
+              <p className="popup-message">This facility is not available at your selected date and time.</p>
             </div>
           );
           setNototifications("error");

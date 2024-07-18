@@ -19,7 +19,8 @@ class UserController extends Controller
     /**
      * Get Supervisor on (Inspection For,\m)
      */
-    public function getSupervisor(){
+    public function getSupervisor()
+    {
         $getUser = PPAUser::where('code_clearance', 4)->get();
 
         $filteredUsers = $getUser->map(function ($user){
@@ -62,6 +63,10 @@ class UserController extends Controller
      * Display User Details
      */
     public function getUserDetails($id){
+
+        // Root URL
+        $rootUrl = URL::to('/');
+
         $getUser = PPAUser::find($id);
 
         $userData = [
@@ -71,8 +76,8 @@ class UserController extends Controller
             'division' => $getUser->division,
             'code' => $getUser->code_clearance,
             'username' => basename($getUser->username),
-            // 'signature' =>  URL::to('/storage/esignature/' . $getUser->image)
             'signature' =>  ('http://20.20.2.1:81/storage/app/public/esignature/' . $getUser->image),
+            //'signature' =>  $rootUrl . '/storage/esignature/' . $getUser->image,
             'image_name' => $getUser->image
         ];
 
@@ -155,7 +160,8 @@ class UserController extends Controller
      * Update User Details
      * (position, division, username)
      */
-    public function updateUserDetails(Request $request, $id){
+    public function updateUserDetails(Request $request, $id)
+    {
 
         //Validate
         $validatedData = $request->validate([
@@ -373,5 +379,27 @@ class UserController extends Controller
         $user->delete();
     
         return response()->json(['message' => 'Personnel deleted successfully'], 200);
+    }
+
+    /**
+     * Delete / Remove Account
+     */
+    public function DeleteAccount(Request $request, $id)
+    {
+        $getUser = PPAUser::find($id);
+
+        if (!$getUser) {
+            return response()->json(['message' => 'User not found.'], 404);
+        }
+
+        $getUser->code_clearance = 0;
+        $getUser->save();
+
+        // Create a new Logs record with the remarks from the request
+        $logs = new Logs();
+        $logs->remarks = $request->input('logs');
+        $logs->save();
+
+        return response()->json(['message' => 'Request closed successfully'], 200);
     }
 }

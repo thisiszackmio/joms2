@@ -73,7 +73,7 @@ export default function MyRequest(){
         });
 
         setDisplayRequest({ mappedData });
-
+        setLoading(false);
     })
     .catch((error) => {
       setLoading(false);
@@ -132,7 +132,6 @@ export default function MyRequest(){
       setDisplayFacRequest({
         mappedData: mappedData
       });
-
       setLoading(false);
     })
     .catch((error) => {

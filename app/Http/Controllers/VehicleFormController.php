@@ -82,11 +82,15 @@ class VehicleFormController extends Controller
      */
     public function show(Request $request, $id)
     {
+        // Root URL
+        $rootUrl = URL::to('/');
+        
         $vehicleForm = VehicleForm::find($id);
 
         $ppaUser = $vehicleForm->user;
         $endUser = $ppaUser->fname . ' ' . $ppaUser->mname. '. ' . $ppaUser->lname;
         $userSignature = ('http://20.20.2.1:81/storage/app/public/esignature/' . $ppaUser->image);
+        //$userSignature = $rootUrl . '/storage/esignature/' . $ppaUser->image;
         $userPosition = $ppaUser->position;
 
         //For Admin Manager
@@ -97,7 +101,7 @@ class VehicleFormController extends Controller
         }
 
         $ManagerName = $ManagerUser->fname . ' ' . $ManagerUser->mname. '. ' . $ManagerUser->lname;
-        $ManagerSignature = ('http://20.20.2.1:81/storage/app/public/esignature/' . $ManagerUser->image);
+        $ManagerSignature = $rootUrl . '/storage/esignature/' . $ManagerUser->image;
 
         $respondData = [
             'vehicle_form' => $vehicleForm,

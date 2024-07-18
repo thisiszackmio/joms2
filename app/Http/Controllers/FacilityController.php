@@ -50,6 +50,9 @@ class FacilityController extends Controller
      */
     public function show(Request $request, $id)
     {
+        // Root URL
+        $rootUrl = URL::to('/');
+
         //Get the data
         $viewRequest = FacilityModel::find($id);
 
@@ -57,10 +60,12 @@ class FacilityController extends Controller
         $ppaUser = $viewRequest->user;
         $endUser = $ppaUser->fname . ' ' . $ppaUser->mname. '. ' . $ppaUser->lname;
         $userSignature = ('http://20.20.2.1:81/storage/app/public/esignature/' . $ppaUser->image);
+        //$userSignature = $rootUrl . '/storage/esignature/' . $ppaUser->image;
 
         $ManagerUser = PPAUser::where('code_clearance', 1)->first();
         $ManagerName = $ManagerUser->fname . ' ' . $ManagerUser->mname. '. ' . $ManagerUser->lname;
         $ManagerSignature = ('http://20.20.2.1:81/storage/app/public/esignature/' . $ManagerUser->image);
+        //$ManagerSignature = $rootUrl . '/storage/esignature/' . $ManagerUser->image;
 
         // Create the response data
         $respondData = [
@@ -141,6 +146,7 @@ class FacilityController extends Controller
                 } 
     
             }
+
 
             if ($occupiedFacility) {
                 return response()->json(['message' => 'Not Vacant']);

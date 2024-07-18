@@ -149,8 +149,8 @@ export default function FacilityFormForm(){
       setPopupMessage(
         <div>
           <p className="popup-title">Success</p>
-          <p>Form submit successfully!</p>
-          <p>Thank You {currentUser.gender == "Male" ? "Sir":"Maam"} {currentUser.fname}!</p>
+          <p className="popup-message">Form submit successfully!</p>
+          <p className="popup-message">Thank You {currentUser.gender == "Male" ? "Sir":"Maam"} {currentUser.fname}!</p>
         </div>
       ); 
       setShowPopup(true);   
@@ -187,7 +187,7 @@ export default function FacilityFormForm(){
       setPopupMessage(
         <div>
           <p className="popup-title">Success</p>
-          <p>Form submit successfully!</p>
+          <p className="popup-message">Form submit successfully!</p>
         </div>
       ); 
       setShowPopup(true);   
@@ -212,7 +212,7 @@ export default function FacilityFormForm(){
     setPopupMessage(
       <div>
         <p className="popup-title">Approval Request</p>
-        <p>
+        <p className="popup-message">
           Do you want to approve {displayRequestFacility?.viewRequestData?.user_id == currentUser.id ? null : (<b>{displayRequestFacility?.requestor?.name + "'s"}</b>)} request?
         </p>
       </div>
@@ -234,8 +234,8 @@ export default function FacilityFormForm(){
       setPopupMessage(
         <div>
           <p className="popup-title">Success</p>
-          <p>Form Request Approved!</p>
-          <p>Thank You {currentUser.gender == "Male" ? "Sir":"Maam"} {currentUser.fname}!</p>
+          <p className="popup-message">Form Request Approved!</p>
+          <p className="popup-message">Thank You {currentUser.gender == "Male" ? "Sir":"Maam"} {currentUser.fname}!</p>
         </div>
       );
       setShowPopup(true);
@@ -276,7 +276,7 @@ export default function FacilityFormForm(){
       setPopupMessage(
         <div>
           <p className="popup-title">Success</p>
-          <p>Form Request Disapproved!</p>
+          <p className="popup-message">Form Request Disapproved!</p>
         </div>
       );
       setShowPopup(true);
@@ -297,7 +297,7 @@ export default function FacilityFormForm(){
     setPopupMessage(
       <div>
         <p className="popup-title">Are you sure</p>
-        <p>If you close this request, it cannot be reopen.</p>
+        <p className="popup-message">If you close this request, it cannot be reopen.</p>
       </div>
     );
   }
@@ -316,7 +316,7 @@ export default function FacilityFormForm(){
       setPopupMessage(
         <div>
           <p className="popup-title">Success</p>
-          <p>You close the request</p>
+          <p className="popup-message">You close the request</p>
         </div>
       );
       setShowPopup(true);
@@ -336,9 +336,11 @@ export default function FacilityFormForm(){
   };
 
   const closePopup = () => {
-    window.location.reload();
     setIsLoading(true);
     setShowPopup(false);
+    fetchFacilityForm();
+    handleCancelReason();
+    handleDisableEdit();
   };
 
   //Generate PDF Section
@@ -919,6 +921,7 @@ export default function FacilityFormForm(){
                             placeholder={displayRequestFacility?.viewFacilityData?.obr_instruct}
                             onChange={ev => setOprInstruct(ev.target.value)}
                             className="block w-full ppa-form"
+                            required
                           />
       
                         </form>
@@ -943,6 +946,7 @@ export default function FacilityFormForm(){
                         value= {OprInstruct}
                         onChange={ev => setOprInstruct(ev.target.value)}
                         className="block w-full ppa-form"
+                        required
                       />
 
                     </form>

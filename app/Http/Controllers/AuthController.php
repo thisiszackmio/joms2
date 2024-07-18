@@ -17,13 +17,49 @@ class AuthController extends Controller
 {
     public function register(RegisterRequest $request)
     {
-        try {
+        try{
+
             // Check if the username already exists
             $existingUser = PPAUser::where('username', $request->input('username'))->first();
+
             if ($existingUser) {
                 return response()->json([
                     'message' => "Username is already taken. Please choose a different username."
-                ], 400);
+                ], 422);
+            }
+
+            // Query to check if the input division and code clearance exist
+            $inputRegister = PPAUser::where('division', $request->input('division'))->where('code_clearance', $request->input('code_clearance'))->first();
+
+            // Query to check if there's an existing Port Manager
+            $checkPM =  PPAUser::where('division', 'Office of the Port Manager')->where('code_clearance', 2)->first();
+
+            if ($inputRegister && $checkPM && $inputRegister->id === $checkPM->id) {
+                return response()->json([
+                    'message' => "Port Manager Code Clearance is already taken"
+                ], 422);
+            }
+
+            // Query if there's a existing Division Manager
+            $checkDM = PPAUser::where('division', $request->input('division'))
+            ->where('code_clearance', 4)
+            ->first();
+
+            if ($inputRegister && $checkDM && $inputRegister->id === $checkDM->id) {
+                return response()->json([
+                    'message' => $request->input('division') . " Manager Code Clearance is already taken"
+                ], 422);
+            }
+
+            // Query if there's a existing Division Manager
+            $checkAM = PPAUser::where('division', 'Administrative Division')
+            ->where('code_clearance', 1)
+            ->first();
+
+            if ($inputRegister && $checkAM && $inputRegister->id === $checkAM->id) {
+                return response()->json([
+                    'message' => $request->input('division') . " Manager Code Clearance is already taken"
+                ], 422);
             }
 
             if ($request->hasFile('image') && $request->file('image')->isValid()) {
@@ -53,7 +89,8 @@ class AuthController extends Controller
                     'division' => $request->input('division'),
                     'position' => $request->input('position'),
                     'code_clearance' => $request->input('code_clearance'),
-                    'password' => Hash::make($request->input('password')),
+                    'pwd_change' => $request->input('code_clearance'),
+                    'password' => Hash::make($request->input('pwd_change')),
                 ]);
                 $token = $user->createToken('main')->plainTextToken;
     
@@ -72,6 +109,7 @@ class AuthController extends Controller
                     'message' => "Invalid image file."
                 ], 400);
             }
+
         } catch (\Exception $e) {
             // Log the exception for debugging
             Log::error('Exception: ' . $e->getMessage());
@@ -91,55 +129,44 @@ class AuthController extends Controller
 
         // Check if the user account exists and the password is valid
         if (!$useracc || !Hash::check($credentials['password'], $useracc->password)) {
-            return response()->json([
-                'message' => 'Invalid Credentials',
-                'errors' => [
-                    'credentials' => ['Invalid Credentials.'],
-                ],
-            ], 422);
+            return response()->json(['message' => 'Invalid Username / Password'], 422);
         }
 
-        // Determine the user's role based on the 'code_clearance' value
-        $userRole = null;
-        $codeClearance = (int) $useracc->code_clearance;
-        // $id = $useracc->id;
-        // $lastname = $useracc->lname;
+        if ($useracc->code_clearance == 0) {
+            return response()->json(['message' => 'Account Deactivate'], 500);
+        }else{  
+            // Determine the user's role based on the 'code_clearance' value
+            $userRole = null;
+            $codeClearance = (int) $useracc->code_clearance;
+            // $id = $useracc->id;
+            // $lastname = $useracc->lname;
 
-        //Code clearance
-        // 1 = Admin Division Manager
-        // 2 = Port Manager
-        // 3 = GSO
-        // 4 = Division Manager/Supervisor
-        // 5 = Regular and COS Employee
-        // 6 = AssignPersonnels
-        // 6 = System Admin
-        // 10 = Hackers
+            if ($codeClearance === 10 || $codeClearance === 7) {
+                // Hackers
+                $userRole = 'h4ck3rZ@1Oppa';
+            }else if ($codeClearance === 1 || $codeClearance === 3 || $codeClearance === 4){
+                // Admin
+                $userRole = '4DmIn@Pp4';
+            }else if ($codeClearance === 2){
+                // Port Manager
+                $userRole = 'Pm@PP4';
+            }else if ($codeClearance === 6){
+                // Personnel
+                $userRole = 'P3rs0nn3lz@pPa';
+            }else{
+                $userRole = 'users';
+            }
 
-        if ($codeClearance === 10 || $codeClearance === 7) {
-            // Hackers
-            $userRole = 'h4ck3rZ@1Oppa';
-        }else if ($codeClearance === 1 || $codeClearance === 3 || $codeClearance === 4){
-            // Admin
-            $userRole = '4DmIn@Pp4';
-        }else if ($codeClearance === 2){
-            // Port Manager
-            $userRole = 'Pm@PP4';
-        }else if ($codeClearance === 6){
-            // Personnel
-            $userRole = 'P3rs0nn3lz@pPa';
-        }else{
-            $userRole = 'users';
+            // Generate a token for the user
+            $token = $useracc->createToken('main')->plainTextToken;
+
+            // Return the response with user data and role
+            return response([
+                'user' => $useracc,
+                'role' => $userRole, 
+                'token' => $token,
+            ]);
         }
-
-        // Generate a token for the user
-        $token = $useracc->createToken('main')->plainTextToken;
-
-        // Return the response with user data and role
-        return response([
-            'user' => $useracc,
-            'role' => $userRole, 
-            'token' => $token,
-        ]);
     }
 
     public function logout(Request $request)

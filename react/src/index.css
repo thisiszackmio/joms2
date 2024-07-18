@@ -99,6 +99,8 @@ p.lower-text { font-size: 12px; color: #848884; }
 .pagination a.page-link { font-size: 12px; }
 
 /* Popup Style */
+.popup-title { font-size: 25px; padding: 10px 0px; font-weight: 500; }
+.popup-message { color: #808080; }
 .popup-confirm { background-color: #7393B3; color: #fff; border-radius: 20px; padding: 8px 0px; }
 .popup-confirm:hover { background-color: #819ebb !important; transition: 250ms; }
 .popup-cancel { border: 1px solid #36454F; margin-left: 10px; border-radius: 20px; }
@@ -162,7 +164,6 @@ input:focus, textarea:focus {
 .icon-form { color: #A9A9A9; }
 
 /* Notification Style */
-p.popup-title { font-size: 25px; padding: 10px 0px; font-weight: 500; }
 .notifications { color: #ffff; background-color: #ff0000; border-radius: 25px; padding: 12px 8px; line-height: 0px; font-size: 14px; position: absolute; left: 15px; top: -6px; }
 
 /* Forbidden Style */
@@ -221,6 +222,10 @@ p.sign-txt {
   text-align: center;
 }
 
+.forbidden-title {
+  font-size: 20px;
+}
+
 /* Style to show the submenu when the parent is hovered */
 .parent:hover .submenu {
   display: block;
@@ -257,6 +262,13 @@ p.sign-txt {
 /* Table size */
 .custom-column {
   width: 200px; /* Adjust the width as needed */
+}
+
+.ppa-table thead {
+  display: table-header-group;
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
 /* Animation Check */

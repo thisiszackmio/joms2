@@ -58,6 +58,9 @@ class InspectionFormController extends Controller
      */
     public function getInspectionForm(Request $request, $id)
     {
+        // Root URL
+        $rootUrl = URL::to('/');
+
         $InspectionRequest = Inspection_Form::find($id);
         $AdminInspectionRequest = AdminInspectionForm::where('inspection__form_id', $id)->first();
         $InspectorRequest = Inspector_Form::where('inspection__form_id', $id)->first();
@@ -66,21 +69,25 @@ class InspectionFormController extends Controller
         $ppaUser = $InspectionRequest->user;
         $reqUser = $ppaUser->fname . ' ' . $ppaUser->mname. '. ' . $ppaUser->lname;
         $reqSignature = ('http://20.20.2.1:81/storage/app/public/esignature/' . $ppaUser->image);
+        //$reqSignature =  $rootUrl . '/storage/esignature/' . $ppaUser->image;
 
         //Get the Supervisor data
         $supervisor = PPAUser::find($InspectionRequest->supervisor_name);
         $supervisorName = $supervisor->fname . ' ' . $supervisor->mname. '. ' . $supervisor->lname;
         $supervisorSignature = ('http://20.20.2.1:81/storage/app/public/esignature/' . $supervisor->image);
+        //$supervisorSignature = $rootUrl . '/storage/esignature/' . $supervisor->image;
 
         //Get the GSO data
         $gsoUser =  PPAUser::where('code_clearance', 3)->first();
         $gsoName = $gsoUser->fname . ' ' . $gsoUser->mname. '. ' . $gsoUser->lname;
         $gsoSignature = ('http://20.20.2.1:81/storage/app/public/esignature/' . $gsoUser->image);
+        //$gsoSignature = $rootUrl . '/storage/esignature/' . $gsoUser->image;
 
         //Get Admin Manager data
         $managerUser = PPAUser::where('code_clearance', 1)->first();
         $managerName = $managerUser->fname . ' ' . $managerUser->mname. '. ' . $managerUser->lname;
         $managerSignature = ('http://20.20.2.1:81/storage/app/public/esignature/' . $managerUser->image);
+        //$managerSignature = $rootUrl . '/storage/esignature/' . $managerUser->image;
 
         //Get Personnel data
         if ($AdminInspectionRequest !== null || $InspectorRequest !== null){
@@ -89,6 +96,7 @@ class InspectionFormController extends Controller
             $personnelId = $personnelUser->id;
             $personnelName = $personnelUser->fname . ' ' . $personnelUser->mname. '. ' . $personnelUser->lname;
             $personnelSignature = ('http://20.20.2.1:81/storage/app/public/esignature/' . $personnelUser->image);
+            //$personnelSignature = $rootUrl . '/storage/esignature/' . $personnelUser->image;
         } else {
             $personnelfetch = null;
             $personnelUser =  null;

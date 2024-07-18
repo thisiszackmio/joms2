@@ -41,6 +41,7 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::put('/changesg/{id}', [UserController::class, 'updateSignature']);
     Route::put('/changepwd/{id}', [UserController::class, 'updatePassword']);
     Route::put('/changeuserpwd/{id}', [UserController::class, 'updateUserPassword']);
+    Route::put('/removeaccount/{id}', [UserController::class, 'DeleteAccount']);
     Route::delete('/removepersonnel/{id}', [UserController::class, 'RemovePersonnel']);
     Route::post('/assignpersonnel', [UserController::class, 'assign']);
 

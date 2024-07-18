@@ -89,7 +89,7 @@ export default function VehicleSlipForm(){
         setPopupMessage(
           <div>
             <p className="popup-title"><strong>Success</strong></p>
-            <p>Form submit successfully</p>
+            <p className="popup-message">Form submit successfully</p>
           </div>
         );    
         setSubmitLoading(false);
@@ -111,6 +111,7 @@ export default function VehicleSlipForm(){
         </div>
       );
       setNototifications("error"); 
+      setSubmitLoading(true);
     }
 
   }
@@ -302,77 +303,76 @@ export default function VehicleSlipForm(){
         </div>
   
       </form>
-  
-      {/* Show Popup */}
-      {showPopup && (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
-  
-          {/* Semi-transparent black overlay */}
-          <div className="fixed inset-0 bg-black opacity-40"></div>
-  
-          {/* Popup content with background blur */}
-          <div className="absolute p-6 rounded-lg shadow-md bg-white backdrop-blur-lg animate-fade-down" style={{ width: '400px' }}>
-  
-            {/* Notification Icons */}
-            <div class="f-modal-alert">
-
-              {/* Error */}
-              {notifications == "error" && (
-              <div className="f-modal-icon f-modal-error animate">
-                <span className="f-modal-x-mark">
-                  <span className="f-modal-line f-modal-left animateXLeft"></span>
-                  <span className="f-modal-line f-modal-right animateXRight"></span>
-                </span>
-              </div>
-              )}
-
-              {/* Success */}
-              {notifications == "success" && (
-              <div class="f-modal-icon f-modal-success animate">
-                <span class="f-modal-line f-modal-tip animateSuccessTip"></span>
-                <span class="f-modal-line f-modal-long animateSuccessLong"></span>
-              </div>
-              )}
-            
-            </div>
-  
-            {/* Message */}
-            <p className="text-lg text-center">{popupMessage}</p>
-  
-            {/* Button */}
-            <div className="flex justify-center mt-4">
-
-              {/* Error / Warning*/}
-              {notifications == "error" && (
-              <>
-                <button onClick={() => (closeError())} className="w-full py-2 btn-error">
-                  Close
-                </button>
-              </>
-              )}
-
-              {/* Success */}
-              {notifications == "success" && (
-              <button
-                onClick={() => {
-                  window.location.href = `/myrequest/${currentUser.id}`;
-                }}
-                className="w-full py-2 btn-success"
-              >
-                View My Request
-              </button>
-              )}
-            </div>
-  
-          </div>
-        </div>
-      )}
-  
     </div>
     ):(
       <div>
         <h2 className="text-xl font-bold leading-7 text-gray-900"> You cannot create a request because you don't have an e-signature. </h2>
         <p className="text-xs text-red-500 font-bold">Please submit your e-signature to the developer so that you can create a request </p>
+      </div>
+    )}
+
+    {/* Show Popup */}
+    {showPopup && (
+      <div className="fixed inset-0 flex items-center justify-center z-50">
+
+        {/* Semi-transparent black overlay */}
+        <div className="fixed inset-0 bg-black opacity-40"></div>
+
+        {/* Popup content with background blur */}
+        <div className="absolute p-6 rounded-lg shadow-md bg-white backdrop-blur-lg animate-fade-down" style={{ width: '400px' }}>
+
+          {/* Notification Icons */}
+          <div class="f-modal-alert">
+
+            {/* Error */}
+            {notifications == "error" && (
+            <div className="f-modal-icon f-modal-error animate">
+              <span className="f-modal-x-mark">
+                <span className="f-modal-line f-modal-left animateXLeft"></span>
+                <span className="f-modal-line f-modal-right animateXRight"></span>
+              </span>
+            </div>
+            )}
+
+            {/* Success */}
+            {notifications == "success" && (
+            <div class="f-modal-icon f-modal-success animate">
+              <span class="f-modal-line f-modal-tip animateSuccessTip"></span>
+              <span class="f-modal-line f-modal-long animateSuccessLong"></span>
+            </div>
+            )}
+          
+          </div>
+
+          {/* Message */}
+          <p className="text-lg text-center">{popupMessage}</p>
+
+          {/* Button */}
+          <div className="flex justify-center mt-4">
+
+            {/* Error / Warning*/}
+            {notifications == "error" && (
+            <>
+              <button onClick={() => (closeError())} className="w-full py-2 btn-error">
+                Close
+              </button>
+            </>
+            )}
+
+            {/* Success */}
+            {notifications == "success" && (
+            <button
+              onClick={() => {
+                window.location.href = `/myrequest/${currentUser.id}`;
+              }}
+              className="w-full py-2 btn-success"
+            >
+              View My Request
+            </button>
+            )}
+          </div>
+
+        </div>
       </div>
     )}
 
