@@ -134,8 +134,13 @@ class AuthController extends Controller
 
         if ($useracc->code_clearance == 0) {
             return response()->json(['message' => 'Account Deactivate'], 500);
-        }else{  
-            // Determine the user's role based on the 'code_clearance' value
+        } else if ($useracc->pwd_change == 1) {    
+            return response()->json([
+                'message' => 'Change Password',
+                'user' => $useracc,
+            ], 200);
+        } else {  
+            //Determine the user's role based on the 'code_clearance' value
             $userRole = null;
             $codeClearance = (int) $useracc->code_clearance;
             // $id = $useracc->id;

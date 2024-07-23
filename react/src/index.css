@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 /* PPA Theme Color */
+.small-text-login { text-align: center; margin-top: 11px; font-size: 14px; }
 .bg-ppa-themecolor { background-color: #132E51; }
 .ppa-theme-active { background-color: #132E51; }
 .ppa-nav li a { font-size: 15px; }

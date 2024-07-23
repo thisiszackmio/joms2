@@ -40,7 +40,6 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::put('/userupdatedet/{id}', [UserController::class, 'updateUserDetails']);
     Route::put('/changesg/{id}', [UserController::class, 'updateSignature']);
     Route::put('/changepwd/{id}', [UserController::class, 'updatePassword']);
-    Route::put('/changeuserpwd/{id}', [UserController::class, 'updateUserPassword']);
     Route::put('/removeaccount/{id}', [UserController::class, 'DeleteAccount']);
     Route::delete('/removepersonnel/{id}', [UserController::class, 'RemovePersonnel']);
     Route::post('/assignpersonnel', [UserController::class, 'assign']);
@@ -111,6 +110,7 @@ Route::get('/notif/{id}', [GetNotificationController::class, 'NewNotification'])
 // Landing Page
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::put('/changeuserpwd/{id}', [UserController::class, 'updateUserPassword']);
 
 Route::get('/getpending/{id}', [DashboardController::class, 'getPendingRequest']);
 

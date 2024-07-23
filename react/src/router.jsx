@@ -48,14 +48,6 @@ const routes = [
         )
       },
       {
-        path:"/newpassword",
-        element: (
-          <ProtectedRoute>
-            <NewPassword />
-          </ProtectedRoute>
-        )
-      },
-      {
         path: "/requestinspectionform",
         element: (
           <ProtectedRoute>
@@ -212,7 +204,11 @@ const routes = [
       {
         path: "/logout",
         element: <Logout />
-      }
+      },
+      {
+        path:"/newpassword",
+        element: <NewPassword />
+      },
     ]
   },
   {

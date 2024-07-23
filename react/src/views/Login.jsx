@@ -25,17 +25,17 @@ export default function Login() {
       password: password
     })
     .then((response) => {
-      setCurrentUser(response.data.user);
-      setUserToken(response.data.token);
-      setUserRole(response.data.role);
+      const getResponse = response.data.message;
 
-      if(data.user.pwd_change){
-        //alert('New Password');
+      if(getResponse == "Change Password"){
+        setCurrentUser(response.data.user);
         window.location.href = '/newpassword';
       }else{
-        //alert('Dashboard');
+        setUserToken(response.data.token);
+        setUserRole(response.data.role);
+        setCurrentUser(response.data.user);
         window.location.href = '/dashboard';
-      }; 
+      }
 
       setSubmitLoading(false);
     })
